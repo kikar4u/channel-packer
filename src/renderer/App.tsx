@@ -1,11 +1,19 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
+
+import processImage from '../main/processImage';
 import ChannelDiv from './ChannelDiv';
-import icon from '../../assets/icon.svg';
+
 import './App.css';
 
 export default function App() {
-  const [channels, setChannels] = useState([
+  type Channel = {
+    id: number;
+    label: string;
+    selectedFile: File | null;
+    uploadedImageUrl: string | null;
+  };
+  const [channels, setChannels] = useState<Channel[]>([
     { id: 1, label: 'Red', selectedFile: null, uploadedImageUrl: null },
     { id: 2, label: 'Green', selectedFile: null, uploadedImageUrl: null },
     { id: 3, label: 'Blue', selectedFile: null, uploadedImageUrl: null },
@@ -45,16 +53,8 @@ export default function App() {
           : currentChannel;
       });
       setChannels(updatedChannels);
-      // const formData = new FormData();
-      // formData.append(
-      //   'myFile',
-      //   channel.selectedFile,
-      //   channel.selectedFile.name,
-      // );
-      // no use
-      // channel.uploadedImageUrl = channel.selectedFile.path;
-      // Make your API call here using formData with axios.post or fetch
       console.log('Uploading file...', (channel.selectedFile as File).path);
+      processImage(channel.selectedFile.path, './src/');
     } else {
       console.log('No file selected!');
     }
